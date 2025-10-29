@@ -5,6 +5,15 @@
     state: present
     name: "{{ part_luks_name }}"
     passphrase: "{{ part_luks_passphrase }}"
+    type: "{{ luks_format }}"
+  when: not luks_mounted
+
+- name: Open LUKS container
+  community.crypto.luks_device:
+    device: "{{ disk_device }}"
+    state: opened
+    name: "{{ part_luks_name }}"
+    passphrase: "{{ part_luks_passphrase }}"
   when: not luks_mounted
 
 - import_tasks: format-mount.yml

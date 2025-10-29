@@ -2,4 +2,4 @@
 cpu_governor: performance
 
 # Tuned profile
-tuned_profile: realtime-virtual-guest
+tuned_profile: throughput-performance

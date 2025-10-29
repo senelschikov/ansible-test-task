@@ -7,6 +7,14 @@
     passphrase: "{{ luks_passphrase }}"
   when: not luks_mounted
 
+- name: Add keyfile to LUKS container
+  community.crypto.luks_device:
+    device: "{{ disk_device }}"
+    state: opened
+    name: "{{ luks_name }}"
+    passphrase: "{{ luks_passphrase }}"
+  when: not luks_mounted
+
 - import_tasks: format-mount.yml
 
 - name: Add to crypttab

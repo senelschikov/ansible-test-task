@@ -23,6 +23,15 @@
   set_fact:
     next_partition: "{{ root_disk_partitions[root_disk_partitions.index(root_partition) | int + 1] | default('') }}"
 
-- name: Set target partition for encryption
+- name: Set target partition for encryption and get its size
   set_fact:
     disk_device: "/dev/{{ next_partition }}"
+    next_partition_size: "{{ ansible_devices[root_disk].partitions[next_partition].size }}"
+
+- name: Choose LUKS format depending on partition size
+  set_fact:
+    luks_format: "{{ 'luks1' if (next_partition_size | int < 16777216) else 'luks2' }}"
+
+- name: debud
+  debug:
+    var: luks_format
