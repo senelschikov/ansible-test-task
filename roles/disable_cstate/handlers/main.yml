@@ -1,0 +1,4 @@
+---
+- name: update grub
+  command: "{{ 'update-grub' if ansible_os_family == 'Debian' else 'grub2-mkconfig -o /boot/grub2/grub.cfg' }}"
+  become: true

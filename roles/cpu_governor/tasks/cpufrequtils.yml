@@ -1,0 +1,20 @@
+---
+- name: Ensure cpufrequtils is installed
+  package:
+    name: cpufrequtils
+    state: present
+
+- name: Ensure cpufrequtils service is running
+  service:
+    name: cpufrequtils
+    state: started
+    enabled: true
+
+- name: Configure cpufrequtils default governor
+  lineinfile:
+    path: /etc/default/cpufrequtils
+    regexp: '^GOVERNOR='
+    line: 'GOVERNOR="{{ cpu_governor }}"'
+    create: yes
+  when: ansible_os_family == "Debian"
+  notify: restart cpufrequtils

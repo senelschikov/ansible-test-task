@@ -1,0 +1,20 @@
+---
+- name: Create LUKS container
+  community.crypto.luks_device:
+    device: "{{ disk_device }}"
+    state: present
+    name: "{{ part_luks_name }}"
+    passphrase: "{{ part_luks_passphrase }}"
+  when: not luks_mounted
+
+- import_tasks: format-mount.yml
+
+- name: Add to crypttab
+  lineinfile:
+    path: /etc/crypttab
+    line: "{{ part_luks_name }} {{ disk_device }} none luks"
+    regexp: "^{{ part_luks_name }}\\s+"
+    state: present
+    create: yes
+    backup: yes
+  register: crypttab

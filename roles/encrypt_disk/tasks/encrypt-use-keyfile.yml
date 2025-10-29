@@ -1,0 +1,35 @@
+---
+- name: Create keyfile
+  command:
+    cmd: dd if=/dev/urandom of={{ luks_keyfile }} bs=2048 count=2
+    creates: "{{ luks_keyfile }}"
+  notify: Set permissions on luks_keyfile
+
+- name: Create LUKS container
+  community.crypto.luks_device:
+    device: "{{ disk_device }}"
+    state: present
+    name: "{{ luks_name }}"
+    passphrase: "{{ luks_passphrase }}"
+  when: not luks_mounted
+
+- name: Add keyfile to LUKS container
+  community.crypto.luks_device:
+    device: "{{ disk_device }}"
+    state: opened
+    name: "{{ luks_name }}"
+    passphrase: "{{ luks_passphrase }}"
+    new_keyfile: "{{ luks_keyfile }}"
+  when: not luks_mounted
+
+- import_tasks: format-mount.yml
+
+- name: Add to crypttab with keyfile
+  lineinfile:
+    path: /etc/crypttab
+    regexp: "^{{ luks_name }}\\s+"
+    line: "{{ luks_name }} {{ disk_device }} {{ luks_keyfile }} luks"
+    state: present
+    create: yes
+    backup: yes
+  register: crypttab

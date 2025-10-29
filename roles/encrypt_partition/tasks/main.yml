@@ -1,0 +1,32 @@
+---
+- name: Gather hardware facts
+  setup:
+    gather_subset:
+      - hardware
+
+- import_tasks: retrieve-partition.yml
+
+- name: Run safety assertions
+  include_tasks: asserts.yml
+
+- import_tasks: mount-checks.yml
+
+- name: Luks encrypt
+  include_tasks: encrypt.yml
+  when: not part_use_keyfile
+
+- name: Luks encrypt with keyfile
+  include_tasks: encrypt-use-keyfile.yml
+  when: part_use_keyfile
+
+- name: Update initramfs after crypttab change
+  command: update-initramfs -u
+  when: crypttab.changed and ansible_os_family == "Debian"
+
+- name: Add string to fstab
+  lineinfile:
+    path: /etc/fstab
+    line: "/dev/mapper/{{ part_luks_name }} {{ part_mount_point }} {{ part_filesystem }} defaults 0 0"
+    regexp: "^/dev/mapper/{{ part_luks_name }}\\s+"
+    state: present
+    backup: yes

@@ -1,0 +1,13 @@
+---
+- name: Gather facts
+  setup:
+    gather_subset:
+      - network
+
+- name: Set fact for current main interface
+  set_fact:
+    current_iface: "{{ ansible_default_ipv4.interface }}"
+    current_mac: "{{ ansible_default_ipv4.macaddress }}"
+
+- import_tasks: configuration.yml
+- import_tasks: show-new-iface-info.yml

@@ -1,0 +1,25 @@
+---
+- name: Get root disk
+  set_fact:
+    root_disk: >-
+      {{
+        (ansible_devices | dict2items |
+         map(attribute='value.partitions') |
+         map('dict2items') | flatten |
+         selectattr('value.uuid','defined') |
+         selectattr('value.uuid','equalto',(ansible_mounts | selectattr('mount','equalto','/') | first).uuid) |
+         map(attribute='key') | first) |
+         regex_replace('[0-9]+$','')
+      }}
+
+- name: Get candidate disks
+  set_fact:
+    candidate_disks: "{{ ansible_devices.keys() | reject('match','^loop') | reject('match','^sr') | reject('match','^dm') | list | sort }}"
+
+- name: Run safety assertions
+  include_tasks: asserts.yml
+
+- name: Pick the second disk in the system, if it is root disk, skip it and pick the third
+  set_fact:
+    disk_device: "/dev/{{ (candidate_disks[2] if candidate_disks[1] == root_disk else candidate_disks[1]) }}"
+

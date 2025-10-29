@@ -1,0 +1,7 @@
+- name: Ensure GRUB_CMDLINE_LINUX contains disable C-state options
+  lineinfile:
+    path: /etc/default/grub
+    regexp: '^GRUB_CMDLINE_LINUX='
+    line: 'GRUB_CMDLINE_LINUX="{{ disable_cstate_kernel_opts }}"'
+    backrefs: yes
+  notify: update grub

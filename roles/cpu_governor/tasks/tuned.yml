@@ -1,0 +1,24 @@
+---
+- name: Ensure tuned is installed
+  package:
+    name: tuned
+    state: present
+
+- name: Ensure tuned service is running
+  service:
+    name: tuned
+    state: started
+    enabled: true
+
+- name: Verify tuned active profile
+  command: tuned-adm active
+  register: tuned_active
+  changed_when: false
+
+- name: Extract current tuned profile
+  set_fact:
+    current_tuned_profile: "{{ tuned_active.stdout.split(':')[-1] | trim }}"
+
+- name: Switch CPU tuning profile with tuned-adm
+  shell: "tuned-adm profile {{ tuned_profile }}"
+  when: tuned_profile != current_tuned_profile

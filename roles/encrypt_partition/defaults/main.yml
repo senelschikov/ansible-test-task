@@ -1,0 +1,12 @@
+# Mount point for encrypted partition
+part_mount_point: "/mnt/part_securedata"
+# File system for encrypted partition
+part_filesystem: "ext4"
+# Luks container name
+part_luks_name: "part_securedata"
+# Add keyfile to container
+part_use_keyfile: false
+# Name of keyfile 
+part_luks_keyfile: "/root/luks-{{ part_luks_name }}.key"
+# Luks passphrase
+part_luks_passphrase: "LuksSecret"

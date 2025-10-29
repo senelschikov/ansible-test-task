@@ -1,0 +1,7 @@
+---
+- name: Set permissions on luks_keyfile
+  file:
+    path: "{{ luks_keyfile }}"
+    owner: root
+    group: root
+    mode: "0400"

@@ -1,0 +1,12 @@
+---
+- name: Unmount next partition if mounted
+  mount:
+    path: "{{ item.mount }}"
+    state: unmounted
+  loop: "{{ ansible_mounts }}"
+  no_log: true
+  when: item.device is search(disk_device)
+
+- name: Check if LUKS device is mounted
+  set_fact:
+    luks_mounted: "{{ ansible_mounts | selectattr('device','equalto','/dev/mapper/' + part_luks_name) | list | length > 0 }}"

@@ -1,0 +1,14 @@
+---
+
+# Encrypt second disk playbook
+- import_playbook: playbooks/encrypt_disk.yml
+# Encrypt the partition that is next to the root partition playbook
+- import_playbook: playbooks/encrypt_partition.yml
+# Disabling C-state for all available playbook
+- import_playbook: playbooks/disable_cstate.yml
+# Switching CPU operation from power-saving mode
+- import_playbook: playbooks/cpu_governor.yml
+# Rename the active network interface playbook
+- import_playbook: playbooks/rename_interface.yml
+# list of CPUs playbook
+- import_playbook: playbooks/show_cpu_info.yml

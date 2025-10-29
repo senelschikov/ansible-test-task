@@ -1,0 +1,11 @@
+---
+- name: Disable C-states via GRUB
+  import_tasks: grub.yml
+
+- name: Disable C-states via sysfs
+  import_tasks: runtime.yml
+  when: disable_cstate_apply_runtime
+
+- name: Disable C-states via /dev/cpu_dma_latency service
+  import_tasks: dma_latency.yml
+  when: disable_cstate_apply_dma_latency

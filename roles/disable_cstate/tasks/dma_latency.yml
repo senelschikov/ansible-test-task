@@ -1,0 +1,27 @@
+---
+- name: Deploy cpu_dma_latency systemd service
+  copy:
+    dest: /etc/systemd/system/cpu_dma_latency.service
+    mode: '0644'
+    content: |
+      [Unit]
+      Description=Disable CPU C-states via /dev/cpu_dma_latency
+      After=multi-user.target
+
+      [Service]
+      Type=simple
+      ExecStart=/bin/sh -c "echo 0 > /dev/cpu_dma_latency; sleep infinity"
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: true
+
+- name: Enable and start cpu_dma_latency service
+  systemd:
+    name: cpu_dma_latency
+    enabled: true
+    state: started

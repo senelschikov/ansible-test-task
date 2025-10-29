@@ -1,0 +1,28 @@
+---
+- name: Get root partition
+  set_fact:
+    root_partition: >-
+      {{
+        (ansible_devices | dict2items |
+         map(attribute='value.partitions') |
+         map('dict2items') | flatten |
+         selectattr('value.uuid','defined') |
+         selectattr('value.uuid','equalto',(ansible_mounts | selectattr('mount','equalto','/') | first).uuid) |
+         map(attribute='key') | first)
+      }}
+
+- name: Derive root disk from root partition
+  set_fact:
+    root_disk: "{{ root_partition | regex_replace('[0-9]+$','') }}"
+
+- name: Collect partitions of root disk
+  set_fact:
+    root_disk_partitions: "{{ ansible_devices[root_disk].partitions.keys() | list | sort }}"
+
+- name: Find next partition after root
+  set_fact:
+    next_partition: "{{ root_disk_partitions[root_disk_partitions.index(root_partition) | int + 1] | default('') }}"
+
+- name: Set target partition for encryption
+  set_fact:
+    disk_device: "/dev/{{ next_partition }}"

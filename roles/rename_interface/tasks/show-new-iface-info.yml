@@ -1,0 +1,20 @@
+---
+- name: Wait for new interface to come up
+  wait_for:
+    path: "/sys/class/net/{{ new_iface_name }}"
+    timeout: 30
+
+- name: Refresh network facts
+  setup:
+    gather_subset:
+      - network
+
+- name: Show renamed interface details
+  debug:
+    msg:
+      device: "{{ ansible_facts[new_iface_name].device }}"
+      active: "{{ ansible_facts[new_iface_name].active }}"
+      mac: "{{ ansible_facts[new_iface_name].macaddress }}"
+      ipv4: "{{ ansible_facts[new_iface_name].ipv4.address | default('N/A') }}"
+      netmask: "{{ ansible_facts[new_iface_name].ipv4.netmask | default('N/A') }}"
+      ipv6: "{{ ansible_facts[new_iface_name].ipv6[0].address | default('N/A') if ansible_facts[new_iface_name].ipv6 is defined else 'N/A' }}"

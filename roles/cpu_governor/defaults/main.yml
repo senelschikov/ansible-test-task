@@ -1,0 +1,5 @@
+# CPU governor
+cpu_governor: performance
+
+# Tuned profile
+tuned_profile: realtime-virtual-guest

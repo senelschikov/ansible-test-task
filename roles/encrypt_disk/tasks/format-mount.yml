@@ -1,0 +1,21 @@
+---
+- name: Format encrypted device
+  filesystem:
+    fstype: "{{ filesystem }}"
+    dev: "/dev/mapper/{{ luks_name }}"
+    force: false
+
+- name: Create mount point
+  file:
+    path: "{{ mount_point }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Mount encrypted device
+  mount:
+    path: "{{ mount_point }}"
+    src: "/dev/mapper/{{ luks_name }}"
+    fstype: "{{ filesystem }}"
+    state: mounted

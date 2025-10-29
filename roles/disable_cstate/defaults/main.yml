@@ -1,0 +1,9 @@
+---
+# GRUB  options for disabling C-states
+disable_cstate_kernel_opts: "processor.max_cstate=0 intel_idle.max_cstate=0 idle=poll"
+
+# Apply runtime to disable C-states immediately
+disable_cstate_apply_runtime: true
+
+# Enforce via /dev/cpu_dma_latency
+disable_cstate_apply_dma_latency: true

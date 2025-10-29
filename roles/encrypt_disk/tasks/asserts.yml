@@ -1,0 +1,29 @@
+---
+- name: Assert at least one candidate disk found
+  assert:
+    that:
+      - candidate_disks | length > 1
+    fail_msg: "No disks are available for encryption"
+
+- name: Assert luks_passphrase is defined, can be decrypted and strong enough
+  assert:
+    that:
+      - luks_passphrase is defined
+      - luks_passphrase is not search("^\\$ANSIBLE_VAULT")
+      - luks_passphrase | length >= 8
+    fail_msg: "Variable luks_passphrase must be set and at least 8 characters."
+
+- name: Assert mountpoint is not root
+  assert:
+    that:
+      - mount_point != '/'
+    fail_msg: "Mountpoint cannot be /"
+
+
+- name: Assert keyfile path is safe if use_keyfile is enabled
+  assert:
+    that:
+      - luks_keyfile is defined
+      - luks_keyfile is match('^/root/')
+    fail_msg: "Keyfile must be inside /root/ when use_keyfile is enabled."
+  when: use_keyfile

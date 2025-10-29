@@ -1,0 +1,18 @@
+---
+- name: Find all cpufreq scaling_governor files
+  find:
+    paths: /sys/devices/system/cpu/
+    patterns: 'scaling_governor'
+    recurse: true
+  register: scaling_governor_files
+
+- name: Set governor for all CPUs
+  shell: "echo {{ cpu_governor }} > {{ item.path }}"
+  with_items: "{{ scaling_governor_files.files }}"
+  ignore_errors: yes
+
+# Configure cpufrequtils 
+- import_tasks: cpufrequtils.yml
+
+# Configure tuned
+- import_tasks: tuned.yml

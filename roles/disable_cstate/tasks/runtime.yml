@@ -1,0 +1,14 @@
+---
+- name: Find all cpuidle disable files
+  find:
+    paths: /sys/devices/system/cpu/
+    patterns: 'disable'
+    recurse: true
+  register: cstate_files
+
+- name: Disable all available C-states
+  copy:
+    dest: "{{ item.path }}"
+    content: "1"
+  with_items: "{{ cstate_files.files }}"
+  ignore_errors: yes

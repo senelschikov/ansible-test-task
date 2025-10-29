@@ -1,0 +1,26 @@
+---
+- name: Show CPU information
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Gather facts
+      setup:
+        gather_subset:
+          - hardware
+
+    - name: Display list of CPUs
+      debug:
+        msg: "{{ ansible_processor }}"
+
+    - name: Check if HT is enabled
+      set_fact:
+        ht_enabled: "{{ (ansible_processor_vcpus | int) > (ansible_processor_cores | int * ansible_processor_count | int) }}"
+
+    - name: Show HT status
+      debug:
+        msg: >-
+          Hyper-Threading/AMD multithreading is {{
+            'ENABLED' if ht_enabled else 'DISABLED'
+          }} (Cores: {{ ansible_processor_cores }},
+             Threads: {{ ansible_processor_vcpus }},
+             Sockets: {{ ansible_processor_count }})

@@ -1,0 +1,48 @@
+---
+- name: Create systemd.link file
+  copy:
+    dest: /etc/systemd/network/10-net0.link
+    content: |
+      [Match]
+      MACAddress={{ current_mac }}
+
+      [Link]
+      Name={{ new_iface_name }}
+    owner: root
+    group: root
+    mode: '0644'
+  register: systemd_link
+
+- name: Find netplan config files
+  find:
+    paths: /etc/netplan
+    patterns: "*.yaml"
+  register: netplan_files
+
+- name: Fail if no netplan configs found
+  assert:
+    that:
+      - netplan_files.files | length > 0
+    fail_msg: "No Netplan configuration files found in /etc/netplan"
+
+- name: Backup netplan configs
+  copy:
+    src: "{{ item.path }}"
+    dest: "{{ item.path }}.bak"
+    remote_src: true
+  with_items: "{{ netplan_files.files }}"
+
+- name: Replace current interface name with target name
+  replace:
+    path: "{{ item.path }}"
+    regexp: "\\b{{ current_iface }}\\b"
+    replace: "{{ new_iface_name }}"
+  with_items: "{{ netplan_files.files }}"
+  register: netplan
+
+- name: Apply netplan configuration
+  command: netplan apply
+  changed_when: true
+  become: true
+  when: systemd_link.changed or netplan.changed
+  register: netplan_apply
