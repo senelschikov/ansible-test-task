@@ -18,7 +18,8 @@ Encrypt the second disk in the system (one that is not the root partition) using
 - `filesystem`: filesystem type (`ext4` by default)
 - `mount_point`: mount target (default `/mnt/securedata`)
 - `use_keyfile`: whether to use a keyfile instead of passphrase (default: `false`)
-- `keyfile_path`: location of keyfile if `use_keyfile=true`
+- `luks_keyfile`: location of keyfile if `use_keyfile=true`
+- `luks_passphrase`: passphrase for encryption
 
 ## Example
 
@@ -29,4 +30,4 @@ Encrypt the second disk in the system (one that is not the root partition) using
     - role: encrypt_disk
       vars:
         use_keyfile: true
-        keyfile_path: /root/luks-securedata.key
+        luks_keyfile: /root/luks-securedata.key

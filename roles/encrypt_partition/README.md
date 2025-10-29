@@ -19,7 +19,8 @@ Encrypt the partition that is present on the disk next to the root partition
 - `part_filesystem`
 - `part_mount_point`
 - `part_use_keyfile`
-- `part_keyfile_path`
+- `part_luks_keyfile`
+- `part_luks_passphrase`
 
 ## Example
 
@@ -29,4 +30,4 @@ Encrypt the partition that is present on the disk next to the root partition
   roles:
     - role: encrypt_partition
       vars:
-        mount_point: /mnt/part_securedata
+        part_mount_point: /mnt/part_securedata
