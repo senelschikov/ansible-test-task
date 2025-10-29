@@ -16,5 +16,4 @@
     regexp: '^GOVERNOR='
     line: 'GOVERNOR="{{ cpu_governor }}"'
     create: yes
-  when: ansible_os_family == "Debian"
   notify: restart cpufrequtils

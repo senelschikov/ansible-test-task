@@ -18,7 +18,7 @@
 
 - name: Update initramfs after crypttab change
   command: update-initramfs -u
-  when: crypttab.changed and ansible_os_family == "Debian"
+  when: crypttab.changed
 
 - name: Add string to fstab
   lineinfile:
