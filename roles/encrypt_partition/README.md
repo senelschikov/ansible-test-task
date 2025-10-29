@@ -1,4 +1,3 @@
-```markdown
 # Role: encrypt_partition
 
 Encrypt the partition that is present on the disk next to the root partition
@@ -16,12 +15,11 @@ Encrypt the partition that is present on the disk next to the root partition
 
 ## Variables
 
-Same as in `encrypt_disk`:
-- `luks_name`
-- `filesystem`
-- `mount_point`
-- `use_keyfile`
-- `keyfile_path`
+- `part_luks_name`
+- `part_filesystem`
+- `part_mount_point`
+- `part_use_keyfile`
+- `part_keyfile_path`
 
 ## Example
 

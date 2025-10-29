@@ -1,6 +1,4 @@
 
----
-
 ### Playbook READMEs (`playbooks/*.yml`)
 
 Each playbook just wraps a role:
@@ -16,9 +14,10 @@ Example (`playbooks/encrypt_disk.yml`):
 
 ```markdown
 # Playbook: encrypt_disk.yml
-
+```
 Runs the `encrypt_disk` role on all hosts to encrypt the second disk.
 
 ## Usage
 ```bash
 ansible-playbook -i inventory/hosts.yml playbooks/encrypt_disk.yml
+```

@@ -1,4 +1,3 @@
-```markdown
 # Role: encrypt_disk
 
 Encrypt the second disk in the system (one that is not the root partition) using LUKS, create a filesystem, and mount it.

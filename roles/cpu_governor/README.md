@@ -1,4 +1,3 @@
-```markdown
 # Role: cpu_governor
 
 Switch CPU operation mode from power-saving to performance.

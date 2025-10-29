@@ -1,4 +1,3 @@
-```markdown
 # Role: rename_interface
 
 Rename the primary network interface to a desired name (default `eth0`) using Netplan.

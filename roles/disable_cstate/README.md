@@ -1,4 +1,3 @@
-```markdown
 # Role: disable_cstate
 
 Disable CPU C-states for performance-sensitive workloads.
